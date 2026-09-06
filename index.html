@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>デッドリフト・トレーニングトラッカー</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="app-header">
+  <h1>デッドリフト・トレーニングトラッカー</h1>
+  <p class="subtitle">①目標設定 → ②1RM記録 → ③トレーニング記録 → ④次回提案 のサイクルで目標を目指す</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="dashboard">ダッシュボード</button>
+  <button class="tab-btn" data-tab="goal">① 目標設定</button>
+  <button class="tab-btn" data-tab="onerm">② 1RM記録</button>
+  <button class="tab-btn" data-tab="training">③ トレーニング記録</button>
+  <button class="tab-btn" data-tab="suggestion">④ 次回提案</button>
+  <button class="tab-btn" data-tab="history">履歴・グラフ</button>
+</nav>
+
+<main>
+
+  <section id="tab-dashboard" class="tab-panel active">
+    <div class="card" id="dashboard-summary"></div>
+    <canvas id="dashboard-chart" width="640" height="300"></canvas>
+  </section>
+
+  <section id="tab-goal" class="tab-panel">
+    <div class="card">
+      <h2>① 目標重量・目標期限を設定</h2>
+      <form id="goal-form">
+        <label>目標1RM (kg)
+          <input type="number" id="goal-weight" step="0.5" min="0" required />
+        </label>
+        <label>目標期限
+          <input type="date" id="goal-date" required />
+        </label>
+        <button type="submit">保存</button>
+      </form>
+      <div id="goal-current" class="muted"></div>
+    </div>
+  </section>
+
+  <section id="tab-onerm" class="tab-panel">
+    <div class="card">
+      <h2>② 現在の1RMを記録</h2>
+      <p class="muted">実測の1RMなら回数=1、サブマックスのトップセットなら重量と回数を入れると自動でEpley式推定します。</p>
+      <form id="onerm-form">
+        <label>日付
+          <input type="date" id="onerm-date" required />
+        </label>
+        <label>重量 (kg)
+          <input type="number" id="onerm-weight" step="0.5" min="0" required />
+        </label>
+        <label>回数
+          <input type="number" id="onerm-reps" min="1" value="1" required />
+        </label>
+        <label>メモ
+          <input type="text" id="onerm-note" />
+        </label>
+        <button type="submit">記録</button>
+      </form>
+    </div>
+    <div class="card">
+      <h3>1RM記録一覧</h3>
+      <table id="onerm-table"><thead><tr><th>日付</th><th>重量</th><th>回数</th><th>推定1RM</th><th>メモ</th><th></th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <section id="tab-training" class="tab-panel">
+    <div class="card">
+      <h2>③ 今日のトレーニング内容を記録</h2>
+      <form id="training-form">
+        <label>日付
+          <input type="date" id="training-date" required />
+        </label>
+        <label>セッション種別
+          <select id="training-type">
+            <option value="volume">ボリューム</option>
+            <option value="intensity">インテンシティ</option>
+            <option value="technique">テクニック/軽負荷</option>
+            <option value="test">1RMテスト</option>
+          </select>
+        </label>
+        <div id="training-sets"></div>
+        <button type="button" id="add-set-btn">セットを追加</button>
+        <label>メモ
+          <input type="text" id="training-note" />
+        </label>
+        <button type="submit">記録</button>
+      </form>
+    </div>
+    <div class="card">
+      <h3>トレーニング記録一覧</h3>
+      <table id="training-table"><thead><tr><th>日付</th><th>種別</th><th>セット内容</th><th>平均RPE</th><th>メモ</th><th></th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <section id="tab-suggestion" class="tab-panel">
+    <div class="card">
+      <h2>④ 次回のトレーニング内容を提案</h2>
+      <button id="generate-suggestion-btn">提案を生成</button>
+      <div id="suggestion-result"></div>
+    </div>
+  </section>
+
+  <section id="tab-history" class="tab-panel">
+    <div class="card">
+      <h2>履歴・グラフ</h2>
+      <canvas id="history-chart" width="640" height="320"></canvas>
+    </div>
+    <div class="card">
+      <h3>データのバックアップ</h3>
+      <button id="export-btn">JSONエクスポート</button>
+      <label class="file-label">JSONインポート
+        <input type="file" id="import-input" accept="application/json" />
+      </label>
+    </div>
+  </section>
+
+</main>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

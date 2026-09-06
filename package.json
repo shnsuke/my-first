@@ -1,0 +1,10 @@
+{
+  "name": "deadlift-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Claudeなしでも動くデッドリフト・トレーニング管理アプリ",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests"
+  }
+}
