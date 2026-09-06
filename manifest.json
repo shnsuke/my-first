@@ -1,0 +1,17 @@
+{
+  "name": "デッドリフト・トレーニングトラッカー",
+  "short_name": "DLトラッカー",
+  "description": "1RMと日々のトレーニングを記録し、次回メニューをルールベースで提案する自己完結型アプリ",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f5f2",
+  "theme_color": "#3d5a80",
+  "lang": "ja",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
