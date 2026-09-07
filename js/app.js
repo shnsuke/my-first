@@ -11,8 +11,49 @@ const SESSION_LABELS = {
   test: "1RMテスト",
 };
 
+function formatTokyoDate(date) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const map = Object.fromEntries(parts.map((p) => [p.type, p.value]));
+  return `${map.year}-${map.month}-${map.day}`;
+}
+
+// 端末時計から即座に計算した暫定値(オフラインでもこれで動く)。
+// オンライン時はsyncReferenceDateFromNetworkがサーバー時刻で上書きする。
+let referenceDate = formatTokyoDate(new Date());
+
 function todayStr() {
-  return new Date().toISOString().slice(0, 10);
+  return referenceDate;
+}
+
+// 自ホスト(このページ自身)へHEADリクエストを送り、レスポンスのDateヘッダーから
+// 端末の時計・タイムゾーン設定に依存しない正確な東京時間を取得する。
+// 起動直後にまだユーザーが手で変更していない日付欄だけを補正する。
+async function syncReferenceDateFromNetwork() {
+  if (!navigator.onLine) return;
+  const staleDate = referenceDate;
+  const dateInputs = [document.getElementById("onerm-date"), document.getElementById("training-date")];
+  try {
+    const res = await fetch(location.href, {
+      method: "HEAD",
+      cache: "no-store",
+      signal: AbortSignal.timeout(5000),
+    });
+    const dateHeader = res.headers.get("date");
+    if (!dateHeader) return;
+    const networkDate = formatTokyoDate(new Date(dateHeader));
+    if (networkDate === staleDate) return;
+    referenceDate = networkDate;
+    for (const input of dateInputs) {
+      if (input && input.value === staleDate) input.value = referenceDate;
+    }
+  } catch {
+    // オフライン・タイムアウト・file://実行時などは端末時計の推定値のまま続行
+  }
 }
 
 function persist() {
@@ -117,6 +158,8 @@ function addSetRow(weight = "", reps = "", rpe = "") {
 
 document.getElementById("add-set-btn").addEventListener("click", () => addSetRow());
 addSetRow();
+
+syncReferenceDateFromNetwork();
 
 const trainingForm = document.getElementById("training-form");
 trainingForm.addEventListener("submit", (e) => {
