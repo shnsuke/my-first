@@ -216,7 +216,7 @@ function renderTrainingTable() {
   });
 }
 
-// --- ④ 今日のトレーニング案 ---
+// --- ④ 次回提案 ---
 // state(目標・1RM記録・トレーニング記録)は既にlocalStorageに永続化されているため、
 // 提案はアプリを開くたび(=renderAll経由)に自動で再計算・再表示される。
 // アプリを閉じて再度開いても、記録が変わっていなければ同じ内容が表示される。
@@ -224,7 +224,7 @@ document.getElementById("generate-suggestion-btn").addEventListener("click", () 
   renderSuggestion();
 });
 
-function buildSuggestionHtml(result) {
+function buildSuggestionHtml(result, sessionLabelPrefix = "次回") {
   if (result.status === "insufficient_data") {
     return `<p class="warning">${result.message}</p>`;
   }
@@ -237,7 +237,7 @@ function buildSuggestionHtml(result) {
   return `
     <p class="status-message">${result.message}</p>
     <div class="prescription-card">
-      <h3>今日: ${SESSION_LABELS[p.sessionType]}</h3>
+      <h3>${sessionLabelPrefix}: ${SESSION_LABELS[p.sessionType]}</h3>
       <p>${p.sets}セット × ${p.reps}回 @ ${p.weight}kg (目標RPE ${p.targetRPE[0]}〜${p.targetRPE[1]})</p>
       ${warmupHtml}
       <p class="muted">${p.feedbackNote}</p>
@@ -267,7 +267,7 @@ function renderDashboard() {
   const result = generateSuggestion(state, todayStr());
   document.getElementById("dashboard-suggestion").innerHTML = `
     <h2>今日のトレーニング案</h2>
-    ${buildSuggestionHtml(result)}
+    ${buildSuggestionHtml(result, "今日")}
   `;
 }
 
