@@ -217,17 +217,16 @@ function renderTrainingTable() {
 }
 
 // --- ④ 次回提案 ---
+// state(目標・1RM記録・トレーニング記録)は既にlocalStorageに永続化されているため、
+// 提案はアプリを開くたび(=renderAll経由)に自動で再計算・再表示される。
+// アプリを閉じて再度開いても、記録が変わっていなければ同じ内容が表示される。
 document.getElementById("generate-suggestion-btn").addEventListener("click", () => {
   renderSuggestion();
 });
 
-function renderSuggestion() {
-  const result = generateSuggestion(state, todayStr());
-  const el = document.getElementById("suggestion-result");
-
+function buildSuggestionHtml(result) {
   if (result.status === "insufficient_data") {
-    el.innerHTML = `<p class="warning">${result.message}</p>`;
-    return;
+    return `<p class="warning">${result.message}</p>`;
   }
 
   const p = result.prescription;
@@ -235,7 +234,7 @@ function renderSuggestion() {
     ? `<p>ウォームアップ目安: ${p.warmups.join(" → ")}kg</p>`
     : "";
 
-  el.innerHTML = `
+  return `
     <p class="status-message">${result.message}</p>
     <div class="prescription-card">
       <h3>次回: ${SESSION_LABELS[p.sessionType]}</h3>
@@ -244,6 +243,12 @@ function renderSuggestion() {
       <p class="muted">${p.feedbackNote}</p>
     </div>
   `;
+}
+
+function renderSuggestion() {
+  const result = generateSuggestion(state, todayStr());
+  document.getElementById("suggestion-result").innerHTML = buildSuggestionHtml(result);
+  return result;
 }
 
 // --- ダッシュボード ---
@@ -257,6 +262,12 @@ function renderDashboard() {
     <h2>現在の状況</h2>
     <p>${goalText}</p>
     <p>推定現在1RM: ${currentE1RM != null ? currentE1RM.toFixed(1) + "kg" : "未記録"}</p>
+  `;
+
+  const result = generateSuggestion(state, todayStr());
+  document.getElementById("dashboard-suggestion").innerHTML = `
+    <h2>④ 次回のトレーニング提案</h2>
+    ${buildSuggestionHtml(result)}
   `;
 }
 
@@ -314,6 +325,7 @@ function renderAll() {
   renderOneRMTable();
   renderTrainingTable();
   renderDashboard();
+  renderSuggestion();
   renderCharts();
 }
 
