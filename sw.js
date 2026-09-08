@@ -1,4 +1,4 @@
-const CACHE_NAME = "deadlift-tracker-v2";
+const CACHE_NAME = "deadlift-tracker-v3";
 const APP_SHELL = [
   "./",
   "./index.html",

@@ -19,7 +19,7 @@
 <body>
 <header class="app-header">
   <h1>デッドリフト・トレーニングトラッカー</h1>
-  <p class="subtitle">①目標設定 → ②1RM記録 → ③トレーニング記録 → ④次回提案 のサイクルで目標を目指す</p>
+  <p class="subtitle">①目標設定 → ②1RM記録 → ③トレーニング記録 → ④今日のトレーニング案 のサイクルで目標を目指す</p>
 </header>
 
 <nav class="tabs">
@@ -27,7 +27,7 @@
   <button class="tab-btn" data-tab="goal">① 目標設定</button>
   <button class="tab-btn" data-tab="onerm">② 1RM記録</button>
   <button class="tab-btn" data-tab="training">③ トレーニング記録</button>
-  <button class="tab-btn" data-tab="suggestion">④ 次回提案</button>
+  <button class="tab-btn" data-tab="suggestion">④ 今日のトレーニング案</button>
   <button class="tab-btn" data-tab="history">履歴・グラフ</button>
 </nav>
 
@@ -112,7 +112,7 @@
 
   <section id="tab-suggestion" class="tab-panel">
     <div class="card">
-      <h2>④ 次回のトレーニング内容を提案</h2>
+      <h2>④ 今日のトレーニング案</h2>
       <button id="generate-suggestion-btn">提案を生成</button>
       <div id="suggestion-result"></div>
     </div>
